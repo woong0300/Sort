@@ -26,8 +26,10 @@ public class Sort{
                 selectionSort(makeInput());
                 break;
             case 2://삽입정렬 
+                insertionSort(makeInput());
                 break;
             case 3://버블정렬 
+                bubbleSort(makeInput());
                 break;
             case 4://셸 정렬 
                 break;
@@ -64,22 +66,54 @@ public class Sort{
         for(int i = 0;i < tmpLen;i++){
             System.out.print(arr[i] + " ");
         }
+        System.out.println();
     }
 
     public static void selectionSort(int[] arr) {
         //행렬을 인풋으로 받고 정렬한 뒤 출력
+        //Selection sort : 제일 작은 element를 제일 왼쪽으로 옮기면서 루프를 줄여가자
+        int tmpLen = arr.length;
+        for(int i = 0;i < tmpLen-1;i++){        //0번째 원소와 나머지를 비교하기 때문에 길이-1까지 루프
+            int least = i;                      //0번째 원소를 두고 1번째부터 비교하면서 끝까지
+            for(int j = i+1;j < tmpLen;j++){
+                int tmp = 0;
+                if(arr[j] < arr[least]){
+                    least = j;
+                }
+                tmp = arr[j];
+                arr[i] = arr[least];
+                
+            }
+        }
+        showArray(arr);
 
     }
 
     public static void insertionSort(int[] arr) {
         int tmpLen = arr.length;
-        for(int i = 0;i < tmpLen;i++){
-            //Todo완성해야 된다.
+        for(int i = 1;i < tmpLen;i++){          //0번째는 정렬되어 있는 거니까 1부터 길이까지 루프
+            int key = arr[i];
+            for(int j = i-1;j >=0 && arr[j] > key;j--){ //과정을 이해해야됨 i번째 원소를 j번째와 비교하며 옮기는 것
+                arr[j+1] = arr[j];
+                arr[j] = key;       //Todo:이 부분이 맞나 확인해봐야됨 
+            }
+            
         }
+        showArray(arr);
     }
 
-    public static void bubbleSort() {
-        
+    public static void bubbleSort(int[] arr) {      //맨 뒤쪽에 큰 값을 넣어주면서 정렬
+        int tmpLen = arr.length;
+        for(int i = tmpLen -1;i > 0;i--){       //행렬길이 때문에 하나 줄어보이는 것
+            for(int j = 0; j < i; j++){
+                if(arr[j] > arr[j+1]){
+                    int tmp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = tmp;
+                }
+            }
+        }
+        showArray(arr);
     }
 
     public static void shellSort() {
