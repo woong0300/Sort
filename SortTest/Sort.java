@@ -34,17 +34,18 @@ public class Sort{
                 case 5://합병정렬   TODO:Need a Exception Handle  
                     int[] mergeTmpArr = new int[10];
                     mergeTmpArr = makeInput();
-                    int mergeTmpLeft = mergeTmpArr[0];
-                    int mergeTmpRight = mergeTmpArr[9];
-                    mergeSort(mergeTmpArr, mergeTmpLeft, mergeTmpRight);
+                    mergeSort(mergeTmpArr, 0, 9);
+                    System.out.print("최종결과 :");
+                    showArray(mergeTmpArr);
                     printMenu();
                     break;
                 case 6://퀵 정렬 
                     int[] quickTmpArr = new int[10];
                     quickTmpArr = makeInput();
-                    int quickTmpLeft = quickTmpArr[0];
-                    int quickTmpRight = quickTmpArr[9];
-                    quickSort(quickTmpArr,quickTmpLeft, quickTmpRight); //TODO:오류 있음 ArrayIndexOutofBoundException:16
+                    int size = quickTmpArr.length;
+                    quickSort(quickTmpArr,0, size-1); //TODO:오류 있음 ArrayIndexOutofBoundException:16
+                    System.out.print("최종결과 :");
+                    showArray(quickTmpArr);
                     printMenu();
                     break;
                 case 7://히프정렬
@@ -156,86 +157,85 @@ public class Sort{
             mergeSort(arr, left, mid);
             mergeSort(arr, mid+1, right);
             merge(arr, left, mid, right);
-            
         }
-        else{
-            System.out.println("오류");
-        }
-        System.out.print("최종결과 :");
-        showArray(arr);
+        
+        
         
     }
 
     public static void merge(int[] arr, int left, int mid, int right) {
-        int tmpLen = arr.length;
-        int[] sorted = new int[tmpLen];
+        
+        int[] sorted = new int[10];
         int i, j, k, l;
         i = left;
         j = mid + 1;
-        k = right;
+        k = left;
         while(i <= mid && j <=right){
             if(arr[i] <= arr[j]){
-                sorted[k++] = arr[i+1];
+                sorted[k] = arr[i];
+                i++;
             }
             else{
-                sorted[k++] = arr[j+1];
+                sorted[k] = arr[j];
+                j++;
             }
+            k++;
         }
         if(i > mid){
-            for(l = j;l <= right; l++){
-                sorted[k++] = arr[l];
+            for(l = j;l <= right; l++, k++){
+                sorted[k] = arr[l];
             }
         }
         else{
-            for(l = i;l <= mid; l++){
-                sorted[k++] = arr[l];
+            for(l = i;l <= mid; l++, k++){
+                sorted[k] = arr[l];
             }
         }
         for(l = left;l <= right; l++){
             arr[l] = sorted[l];
         }
+        //System.out.print("최종결과 :");
+        showArray(arr);
     }
     
     public static void quickSort(int[] arr, int left, int right) {
-        int arrLeft = arr[0];
-        int arrRight = arr[9];
         if(left < right){
-            int q = partition(arr, arrLeft, arrRight);  //TODO:오류 있음 ArrayIndexOutofBoundException:16
+            int q = partition(arr, left, right); 
             quickSort(arr, left, q-1);
             quickSort(arr, q+1, right);
         }
-        System.out.print("최종결과 :");
+        //System.out.print("최종결과 :");
         showArray(arr);
     }
     
     public static int partition(int[] arr, int left, int right) {
-        int pivot, temp;
-        int low, high;
-        low = left;
-        high = right + 1;
-        pivot = arr[left];  //TODO:오류 있음 ArrayIndexOutofBoundException:16
-        do{
-            do{
-                low++;
-                do{
-                    high--;
-                    
-                    if(low < high){
-                        try {
-                            temp = arr[low];
-                            arr[low] = arr[high];
-                            arr[high] = temp;
-                            showArray(arr);    
-                        } catch (Exception e) {
-                            System.out.println("파티션함수 오류");//TODO: handle exception
-                        }
-                        
-                    }
-                }while(high >= left && arr[high] > pivot);
-            }while(low <= right && arr[low] < pivot);
-            
-        }while(low < high);
-        return high;
+        int pivot, temp, begin, end;
+        begin = left;
+        end = right;
+        pivot = (int)(left + right)/2;  
+        while(begin < end){
+            while(begin <= end && arr[begin] <= arr[pivot]){
+                begin++;
+            }
+            while(begin <= end && arr[end] > arr[pivot]){
+                end--;
+            }
+            if(begin <= end){
+                temp = arr[begin];
+                arr[begin] = arr[end];
+                arr[end] = temp;  
+                if(end == pivot){
+                    return begin;
+                }
+            }
+        }
+        
+        temp = arr[pivot];
+        arr[pivot] = arr[end];
+        arr[end] = temp;
+        return end;            
+        
+        
     }
     
     public static void heapSort(int[] arr) {
